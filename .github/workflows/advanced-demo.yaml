@@ -1,0 +1,43 @@
+name: Advanced Demo
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build step
+        run: echo "Building the project"
+        
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test step
+        run: echo "Running tests"
+        
+  deploy:
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Deploy step
+        run: |
+          echo "Deploying to ${{ github.event.inputs.environment }}"
+          echo "This only runs on manual trigger"

@@ -1,0 +1,23 @@
+name: demo action
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Hello World from $GITHUB_ACTION"
+      
+      - name: demo action
+        uses: actions/checkout@v4
+      
+      - name: run a script
+        run: echo "Hello World from a single script"
+      
+      - name: run multiline 
+        run: |
+          echo "Hello World from another script1"
+          echo "Hello World from another script2"
